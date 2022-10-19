@@ -1,16 +1,16 @@
-import function_query as funct
+from typing import Iterable
 
-import function_query as functions
 from marshmallow import Schema, fields, validates_schema, ValidationError
-import function_query
 
-VALID_CMD_Param = {
+VALID_CMD_Param: Iterable[str] = {
     'filter',
     'map',
     'unique',
     'sort',
     'limit',
+    'regex',
 }
+
 
 class RequestParams(Schema):
     cmd1 = fields.Str(required=True)
@@ -20,10 +20,10 @@ class RequestParams(Schema):
 
 
     @validates_schema
-    def validate_cmd_params(self, values, *args, **kwargs):
+    def validate_cmd_params(self, values: dict[str, str], *args, **kwargs) -> dict:
         if values['cmd1'] not in VALID_CMD_Param:
-            raise ValidationError
+            raise ValidationError("Не корректная команда")
         if values['cmd2'] not in VALID_CMD_Param:
-            raise ValidationError
+            raise ValidationError("Не корректная команда")
 
         return values
